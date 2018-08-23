@@ -1,0 +1,3 @@
+@extends('goods::layouts.category')
+
+

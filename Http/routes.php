@@ -1,6 +1,1 @@
-<?php
-
-Route::group(['middleware' => 'web', 'prefix' => 'goods', 'namespace' => 'Modules\Goods\Http\Controllers'], function()
-{
-    Route::get('/', 'GoodsController@index');
-});
+﻿<?phpRoute::group(['middleware' => 'web', 'prefix' => 'goods', 'namespace' => 'Modules\Goods\Http\Controllers'], function(){    Route::get('/goodslist/', 'GoodsController@index');    Route::get('/category/', 'CategoryController@index');    Route::get('/goods_detail/', 'GoodsController@detail');});

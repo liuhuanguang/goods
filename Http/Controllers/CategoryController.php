@@ -1,11 +1,13 @@
 <?php
+
 namespace Modules\Goods\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-class GoodsController extends Controller
+
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,14 +16,15 @@ class GoodsController extends Controller
     public function index(Request $request)
     {
         $id = $request->input('id');
-        $goods_list = DB::table('goods')->where('goods_category_id', $id)->select('id','goods_name','goods_price','goods_images')->where('is_show', 1)->where('is_del', 1)->orderBy('id', 'desc')->get();
-        return view('goods::goods_list',['goods_list'=>$goods_list]);
-    }
-    public function detail(Request $request)
-    {
-        $id = $request->input('id');
-        $goods_detail = DB::table('goods')->where('is_del', 1)->find($id);
-        return view('goods::goods_detail',['goods_detail'=>$goods_detail]);
+        $cat_list = DB::table('goods_category')->where('goods_category_pid', 0)->where('is_show', 1)->where('is_del', 1)->orderBy('id', 'desc')->get()->map(function ($value) {
+            return (array)$value;
+        })->toArray();;
+        if (!empty($id)) {
+            $next_cat = DB::table('goods_category')->where('goods_category_pid', $id)->where('is_show', 1)->where('is_del', 1)->orderBy('id', 'desc')->get();
+        } else {
+            $next_cat = DB::table('goods_category')->where('goods_category_pid', $cat_list[0]['id'])->where('is_show', 1)->where('is_del', 1)->orderBy('id', 'desc')->get();
+        }
+        return view('goods::category', ['cat_list' => $cat_list, 'next_cat' => $next_cat, 'id' => $id]);
     }
 
     /**
