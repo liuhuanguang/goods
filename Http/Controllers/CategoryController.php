@@ -18,7 +18,7 @@ class CategoryController extends Controller
         $id = $request->input('id');
         $cat_list = DB::table('goods_category')->where('goods_category_pid', 0)->where('is_show', 1)->where('is_del', 1)->orderBy('id', 'desc')->get()->map(function ($value) {
             return (array)$value;
-        })->toArray();;
+        })->toArray();
         if (!empty($id)) {
             $next_cat = DB::table('goods_category')->where('goods_category_pid', $id)->where('is_show', 1)->where('is_del', 1)->orderBy('id', 'desc')->get();
         } else {
