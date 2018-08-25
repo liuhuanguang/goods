@@ -1,6 +1,6 @@
 @extends('goods::layouts.head')
 <body class="bfff">
-<div class="order_head"><a class="fanhui" href="list_ny.html"><i class="iconfont icon-jiantou"></i></a><p>订单确认</p></div>
+<div class="order_head"><a class="fanhui" href="javascript:history.go(-1)"><i class="iconfont icon-jiantou"></i></a><p>订单确认</p></div>
 <div class="buy">
 	<div class="cl-a addmap">
 		<div class="tianjia cl-a" >
@@ -15,26 +15,24 @@
 			<div class="map"><span>广东省</span><span>广州市</span><span>天河区</span><span>东圃镇东圃路</span></div>
 		</div> -->
 	</div>
-	@foreach($cart_list as $key=>$val)
-		<input type="hidden" name="cart_id" value="{{$cart_id}}">
+		<input type="hidden" name="cart_id" value="{{$goods->id}}">
 	<div class="goods p3">
 		<a class="cl-a" href="list_ny.html">
-			<img class="fl img" src="{{ URL::asset($val->goods_images)}}" alt="">
+			<img class="fl img" src="{{ URL::asset($goods->goods_images)}}" alt="">
 			<div class="fl center">
-				<p class="name">{{$val->goods_name}}</p>
+				<p class="name">{{$goods->goods_name}}</p>
 				{{--<div class="guige">规格：<span>红色</span><span>M号</span></div>--}}
-				<div class="cl-a down"><p class="number fl">×{{$val->goods_number}}</p><p class="price fr">￥{{$val->goods_price}}</p></div>
+				<div class="cl-a down"><p class="number fl">×{{$goods->number}}</p><p class="price fr">￥{{$goods->goods_price}}</p></div>
 			</div>
 		</a>
 	</div>
-	@endforeach
 	<!-- <div class="xiaoji">
 		<p class="left fl">商品小计</p>
 		<p class="right fr">￥<span>48</span></p>
 	</div> -->
 	<div class="gobuy">
 		<a class="bnt fr" onclick="buy()">去结算</a>
-		<div class="fr price">需付：<p><span>￥{{$amount}}</span></p></div>
+		<div class="fr price">需付：<p><span>￥{{$goods->count}}</span></p></div>
 	</div>
 </div>
 
@@ -54,11 +52,12 @@
             },
             dataType:'json',
             success : function (res){
-				if(res.code == 200){
-				    window.location.href = '/payments/pay?order_id='+res.order_id;
-				}else{
-				    alert(data.msg);
-				}
+                if(res.code == 200){
+                    window.location.href = '/payments/pay?order_id='+res.order_id;
+                }else{
+                    alert(data.msg);
+                }
+
             }
         });
     }

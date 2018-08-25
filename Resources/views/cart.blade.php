@@ -1,7 +1,7 @@
 @extends('goods::layouts.head')
 <body>
 <div class="order_head">
-	<a class="fanhui" href="my.html"><i class="iconfont icon-jiantou"></i></a>
+	<a class="fanhui" href="javascript:history.go(-1)"><i class="iconfont icon-jiantou"></i></a>
 	<p>购物车</p>
 	<a class="rig_shai" id="rem_s" href="javascript:void(0)">编辑</a>
 </div>
@@ -24,9 +24,9 @@
 					<div class="cl-a">
 						<span class="fl price">￥{{$val->goods_price}}</span>
 						<sapn class="div_right">
-							<input type="button" value="-" class="btn1" />
-							<span class="number">{{$val->goods_number}}</span>
-							<input type="button" value="+" class="btn2" />
+							<input type="button" value="-" class="btn1"  onclick="jian({{$val->id}})" />
+							<span class="number" id="number_{{$val->id}}">{{$val->goods_number}}</span>
+							<input type="button" value="+" class="btn2"  onclick="add({{$val->id}})" />
 							</span>
 					</div>
 				</div>
@@ -57,7 +57,7 @@
 			</label>
 		</div>
 		<div class="fr">
-			<button class="delete">删除</button>
+			<button class="delete" onclick="del()">删除</button>
 		</div>
 	</div>
 	<div class="text1">
@@ -84,38 +84,94 @@
     }
 
     function buy(){
-        var obj = $('#form').serialize();
-        var card_id = "";
+        var cart_id = "";
         $('input[name=cart_id]:checked').each(function(i){
             if(0==i){
-                card_id= $(this).val();
+                cart_id= $(this).val();
 
             }else{
-                card_id += (","+$(this).val());
+                cart_id += (","+$(this).val());
             }
         });
-
-
-        // var arr=[];
-        // for(var i=0;i<list.length;i++){
-        //     // alert($(".show_goods .goods_box .add .spec .active:eq("+i+")").html())
-        //     arr.push($(".show_goods .goods_box .add .spec .active:eq("+i+")").html())
-        // }
         $.ajax({
             url:'flow/buy',
             type: 'post',
-            data : {"cart_id" : card_id},
+            data : {"cart_id" : cart_id},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             dataType:'json',
             success : function (res){
                 window.location.href = "flow/cart_buy?cart_id="+res;
+            }
+        });
+    }
+    
+	function add(id) {
+        var number=Number($("#number_"+id).html())+1;
+        $.ajax({
+            url:'flow/number',
+            type: 'post',
+            data : {"id" : id,"number":number},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType:'json',
+            success : function (res){
+                $("#number_"+res.id).html(res.goods_number);
+
+            }
+        });
+		
+    }
+
+    function jian(id) {
+        var number=Number($("#number_"+id).html())-1;
+        if(number!=0) {
+            $.ajax({
+                url: 'flow/number',
+                type: 'post',
+                data: {"id": id, "number": number},
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json',
+                success: function (res) {
+                    $("#number_" + res.id).html(res.goods_number);
+
+                }
+            });
+        }
+    }
+
+    function del(){
+        var cart_id = "";
+        $('input[name=cart_id]:checked').each(function(i){
+            if(0==i){
+                cart_id = ($(this).val());
+
+            }else{
+                cart_id  += (","+$(this).val());
+            }
+        });
+		if(!cart_id){
+		    alert('请勾选要删除的商品');exit;
+		}
+        $.ajax({
+            url:'flow/del',
+            type: 'post',
+            data : {"cart_id" : cart_id },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType:'json',
+            success : function (res){
+                alert(res);
+                window.location.reload();
 
             }
         });
     }
-
 
 
 

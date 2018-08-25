@@ -2,7 +2,7 @@
 <body>
 <div class="page">
 <header class="bar bar-nav">
-<a class="button button-link button-nav pull-left" href="cart.html" data-transition='slide-out'>
+<a class="button button-link button-nav pull-left" href="javascript:history.go(-1)" data-transition='slide-out'>
   <span class="icon icon-left"></span>
 </a>
 <h1 class="title">我的生活</h1>
@@ -11,27 +11,25 @@
 <div class="index_top">
 	<div class="swiper-container" id="swiper1">
 		<div class="swiper-wrapper">
-		    <div class="swiper-slide"><img src="{{ URL::asset('static/img/1475869586530689271.png')}}" alt=""></div>
-		    <div class="swiper-slide"><img src="{{ URL::asset('static/img/1475947014493634167.png')}}" alt=""></div>
+			@foreach($ad as $val)
+				<div class="swiper-slide"><a href="{{$val->ad_link}}"><img src="{{ URL::asset($val->ad_images)}}" alt=""></a></div>
+		   @endforeach
 		</div>
 		<div class="swiper-pagination"></div>
 	</div>
 	<div class="search">
 		<div class="search_box cl-a">
-			<input class="fl" type="text" placeholder="请输入您搜索的关键词！">
-			<i class="iconfont icon-sousuo fr"></i>
+			<form action="search" method="get" id="search">
+			<input class="fl" type="text" name="keywords" placeholder="请输入您搜索的关键词！">
+			<i class="iconfont icon-sousuo fr" onclick="search()"></i>
+			</form>
 		</div>
 	</div>
 </div>
 <ul class="index_nav_list container between">
-	<li><a href=""><img src="{{ URL::asset('static/img/nav_0.png')}}" alt=""></a><p>全部分类</p></li>
-	<li><a href=""><img src="{{ URL::asset('static/img/nav_1.png')}}" alt=""></a><p>全部分类</p></li>
-	<li><a href=""><img src="{{ URL::asset('static/img/nav_2.png')}}" alt=""></a><p>全部分类</p></li>
-	<li><a href=""><img src="{{ URL::asset('static/img/nav_3.png')}}" alt=""></a><p>全部分类</p></li>
-	<li><a href=""><img src="{{ URL::asset('static/img/nav_4.png')}}" alt=""></a><p>全部分类</p></li>
-	<li><a href=""><img src="{{ URL::asset('static/img/nav_5.png')}}" alt=""></a><p>全部分类</p></li>
-	<li><a href=""><img src="{{ URL::asset('static/img/nav_6.png')}}" alt=""></a><p>全部分类</p></li>
-	<li><a href=""><img src="{{ URL::asset('static/img/nav_7.png')}}" alt=""></a><p>全部分类</p></li>
+	@foreach($nav as $val)
+	<li><a href="{{$val->nav_link}}"><img src="{{ URL::asset($val->nav_images)}}" alt=""></a><p>{{$val->nav_name}}</p></li>
+	@endforeach
 </ul>
 <!-- <ul class="index_cate container between">
 	<li><a href=""><img src="img/index-theme-icon1.gif" alt=""></a></li>
@@ -45,37 +43,34 @@
 	<p class="text">实时推荐最适合您的宝贝</p>
 </div>
 <ul class="index_sp_list p3 container between mb3">
+	@foreach($goods as $val)
 	<li>
-		<a href="list_ny.html">
-			<img src="{{ URL::asset('static/img/TB1g2FWFVXXXXbIXVXXXXXXXXXX_!!0-item_pic.jpg')}}" alt="">
-			<h3>蕴蓓 孕妇洗面奶控油纯天然 孕妇专用洗面奶保湿哺乳期洁面乳正品</h3>
-			<p>￥48元</p>
+		<a href="goods_detail?id={{$val->id}}">
+			<img src="{{ URL::asset($val->goods_images)}}" alt="">
+			<h3>{{$val->goods_name}}</h3>
+			<p>￥{{$val->goods_price}}元</p>
 		</a>
 	</li>
-	<li>
-		<a href="list_ny.html">
-			<img src="{{ URL::asset('static/img/T1jljyFyBaXXXXXXXX_!!0-item_pic.jpg')}}" alt="">
-			<h3>蕴蓓 孕妇洗面奶控油纯天然 孕妇专用洗面奶保湿哺乳期洁面乳正品</h3>
-			<p>￥48元</p>
-		</a>
-	</li>
-	<li>
-		<a href="list_ny.html">
-			<img src="{{ URL::asset('static/img/T1hWBpFq0bXXbgMN73_050332.jpg')}}" alt="">
-			<h3>Apple/苹果 配备 Retina 显示屏的 MacBook Pro ME864CH/A</h3>
-			<p>￥48元</p>
-		</a>
-	</li>
-	<li>
-		<a href="list_ny.html">
-			<img src="{{ URL::asset('static/img/T1JuZKFFdcXXXXXXXX_!!0-item_pic.jpg')}}" alt="">
-			<h3>蕴蓓 孕妇洗面奶控油纯天然 孕妇专用洗面奶保湿哺乳期洁面乳正品</h3>
-			<p>￥48元</p>
-		</a>
-	</li>
+	@endforeach
 </ul>
 <!-- 底部nav -->
 @extends('goods::layouts.footer')
 @section('footer')
 	@parent
 @endsection
+	<script>
+        window.onload = function() {
+            // 顶部banner
+            var bannerSwiper = new Swiper('#swiper1', {
+                autoplay: {
+                    delay: 5000,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                },
+            });
+        }
+    function search() {
+       $("#search").submit();
+    }
+	</script>

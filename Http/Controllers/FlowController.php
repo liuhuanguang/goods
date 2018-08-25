@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-
+error_reporting( E_PARSE );
 class FlowController extends Controller
 {
     protected $user=1;
@@ -25,11 +25,8 @@ class FlowController extends Controller
             return $next($request);
         });
     }
-
-
     public function addcart(Request $request)
     {
-
         $goods_id = $request->input('id');
         $number = $request->input('number');
         //查询商品
@@ -71,7 +68,7 @@ class FlowController extends Controller
             }
         } else {
             DB::table('cart')->increment('goods_number', $number);
-            $msg = '添加购物车成功';
+            $msg= '添加购物车成功';
             return json_encode($msg);die;
         }
     }
@@ -106,14 +103,59 @@ class FlowController extends Controller
             ->where('cart.user_id',$this->user)
             ->whereIn('cart.id',$id)
             ->get();
-        return view('goods::buy',['cart_list'=>$cart_list,'cart_id'=>$cart_id]);
+        $amount=$this->cart_amount($id);
+        return view('goods::buy',['cart_list'=>$cart_list,'cart_id'=>$cart_id,'amount'=>$amount]);
+
+    }
+
+    public function zj_cart_buy(Request $request){
+        $form=$request->input();
+        $msg =  $form;
+        return json_encode($msg);die;
 
     }
     //直接下单
     public function zj_buy(Request $request){
-        $form=$request->input();
-        return view('goods::zj_buy',['cart_list'=>$cart_list]);
+        $id=$request->input();
+        $goods=Db::table('goods')->select('id','goods_name','goods_images','goods_price')->where('id',$id['id'])->first();
+        $goods->number=$id['number'];
+        $goods->count=$goods->goods_price*$id['number'];
+        return view('goods::zj_buy',['goods'=>$goods]);
 
+    }
+
+    //更新购物车数量
+    public function update_number(Request $request){
+        $data=$request->input();
+        DB::table('cart')->where('id',$data['id'])->update(['goods_number'=>$data['number']]);
+        //查出最新的购物车数量
+        $number=DB::table('cart')->select('id','goods_number')->where('id',$data['id'])->first();
+        $msg =  $number;
+        return json_encode($msg);die;
+
+    }
+    //删除购物车
+    public function delete(Request $request){
+        $data=$request->input('cart_id');
+        $id=explode(',',$data);
+        foreach($id as $val){
+        DB::table('cart')->where('id',$val)->delete();
+        }
+        $msg = '删除成功';
+        return json_encode($msg);die;
+
+    }
+    //购物车总额
+    protected function cart_amount($cart_id)
+    {
+        $cart = Db::table('cart')->whereIn('id',$cart_id)->get()->map(function ($value) {
+            return (array)$value;
+        })->toArray();
+        $money ='';
+        foreach ($cart as $key => $val) {
+           $money +=$val['goods_price']*$val['goods_number'];
+        }
+        return $money;
     }
 
 

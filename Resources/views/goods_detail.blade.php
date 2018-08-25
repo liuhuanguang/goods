@@ -61,7 +61,7 @@
         </div>
         <div class="swiper-pagination"></div>
     </div>
-    <div class="return"><a href="list.html"><i class="iconfont icon-jiantou"></i></a></div>
+    <div class="return"><a href=""><i class="iconfont icon-jiantou"></i></a></div>
     <div class="list_ny_code"><img src="{{ URL::asset('static/img/ewm1.png')}}"></div>
 </div>
 <div class="show_code">
@@ -150,6 +150,7 @@
             dataType:'json',
             success : function (res){
                 alert(res);
+             window.location.reload();
             }
         });
 	}
@@ -164,7 +165,7 @@
         }
         var number = $("#number").val();
             $.ajax({
-                url:'flow/zj_buy',
+                url:'flow/zj_cart_buy',
                 type: 'post',
                 data : {"id" : id,"number":number,"attr":arr},
                 headers: {
@@ -172,7 +173,7 @@
                 },
                 dataType:'json',
                 success : function (res){
-                    alert(res);
+                    window.location.href = "flow/zj_buy?id="+res.id+"&number="+res.number;
                 }
             });
         }

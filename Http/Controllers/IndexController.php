@@ -15,8 +15,15 @@ class IndexController extends Controller
      */
     public function index(Request $request)
     {
+        //查出广告轮播
+        $ad=DB::table('ad')->orderBy('sort','id','desc')->get();
 
-        return view('goods::index');
+        //查出导航栏
+        $nav=DB::table('nav')->orderBy('sort','id','desc')->get();
+
+        //查出推荐商品
+        $goods=DB::table('goods')->select('id','goods_name','goods_price','goods_images')->where('is_hot',1)->orderBy('sort','id','desc')->get();
+       return view('goods::index',['ad'=>$ad,'nav'=> $nav,'goods'=>$goods]);
     }
 
     /**
@@ -40,7 +47,7 @@ class IndexController extends Controller
     /**
      * Show the specified resource.
      * @return Response
-     */
+     *
     public function show()
     {
         return view('goods::show');

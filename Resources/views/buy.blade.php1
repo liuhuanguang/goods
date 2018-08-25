@@ -1,6 +1,6 @@
 @extends('goods::layouts.head')
 <body class="bfff">
-<div class="order_head"><a class="fanhui" href="list_ny.html"><i class="iconfont icon-jiantou"></i></a><p>订单确认</p></div>
+<div class="order_head"><a class="fanhui" href="javascript:history.go(-1)"><i class="iconfont icon-jiantou"></i></a><p>订单确认</p></div>
 <div class="buy">
 	<div class="cl-a addmap">
 		<div class="tianjia cl-a" >
@@ -34,7 +34,7 @@
 	</div> -->
 	<div class="gobuy">
 		<a class="bnt fr" onclick="buy()">去结算</a>
-		<div class="fr price">需付：<p><span>￥{{$amount}}</span></p></div>
+		<div class="fr price">需付：<p><span>￥{{$val->goods_price}}</span></p></div>
 	</div>
 </div>
 
@@ -54,11 +54,7 @@
             },
             dataType:'json',
             success : function (res){
-				if(res.code == 200){
-				    window.location.href = '/payments/pay?order_id='+res.order_id;
-				}else{
-				    alert(data.msg);
-				}
+
             }
         });
     }

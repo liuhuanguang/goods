@@ -6,20 +6,44 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-
+error_reporting( E_PARSE );
 class GoodsController extends Controller
 {
     protected $user_id = 1;
-
+//    public function __construct()
+//    {
+////        if(!session('user')){
+////            return redirect()->route('login');
+////        }
+////        $this->request = request();
+//        // 验证是否登录
+//        $this->middleware(function ($request, $next) {
+//            if (!session('user')) {
+//                redirect('user/login')->send();exit();
+//            }
+//            $this->user=session('user')['id'];
+//            return $next($request);
+//        });
+//    }
     /**
      * Display a listing of the resource.
      * @return Response
      */
     public function index(Request $request)
     {
-        $id = $request->input('id');
-        $goods_list = DB::table('goods')->where('goods_category_id', $id)->select('id', 'goods_name', 'goods_price', 'goods_images')->where('is_show', 1)->where('is_del', 1)->orderBy('id', 'desc')->get();
-        return view('goods::goods_list', ['goods_list' => $goods_list]);
+        $data = $request->input();
+        if ($data['sort'] == 'sale_desc') {
+            $goods_list = DB::table('goods')->where('goods_category_id', $data['id'])->select('id', 'goods_name', 'goods_price', 'goods_images')->where('is_show', 1)->where('is_del', 1)->orderBy('spu_count','desc')->get();
+        }
+
+        if ($data['sort'] == 'price_desc') {
+            $goods_list = DB::table('goods')->where('goods_category_id', $data['id'])->select('id', 'goods_name', 'goods_price', 'goods_images')->where('is_show', 1)->where('is_del', 1)->orderBy('goods_price','desc')->get();
+        }
+
+        if (empty($data['sort'])) {
+            $goods_list = DB::table('goods')->where('goods_category_id', $data['id'])->select('id', 'goods_name', 'goods_price', 'goods_images')->where('is_show', 1)->where('is_del', 1)->orderBy('sort','desc')->orderBy('id','desc')->get();
+        }
+        return view('goods::goods_list', ['goods_list' => $goods_list,'id'=>$data['id']]);
     }
 
     public function detail(Request $request)
@@ -61,8 +85,6 @@ class GoodsController extends Controller
             ->join('goods', 'goods.id', '=', 'integral_goods.goods_id')
             ->orderBy('integral_goods.id', 'desc')
             ->get();
-
-
         return view('goods::integral', ['goods_list' => $goods]);
 
     }
@@ -78,6 +100,28 @@ class GoodsController extends Controller
             ->first();
 
         return view('goods::integral_detail', ['goods_detail' => $goods_detail]);
+
+    }
+
+    //搜索商品
+    public function search(Request $request)
+    {
+        $data = $request->input();
+
+        if ($data['sort'] == 'sale_desc') {
+            $goods = DB::table('goods')->select('id', 'goods_name', 'goods_images', 'goods_price')->where('goods_name', 'like', '%' . $data['keywords'] . '%')->orderBy('spu_count','desc')->get();
+        }
+
+        if ($data['sort'] == 'price_desc') {
+            $goods = DB::table('goods')->select('id', 'goods_name', 'goods_images', 'goods_price')->where('goods_name', 'like', '%' . $data['keywords'] . '%')->orderBy('goods_price','desc')->get();
+        }
+
+        if (empty($data['sort'])) {
+            $goods = DB::table('goods')->select('id', 'goods_name', 'goods_images', 'goods_price')->where('goods_name', 'like', '%' . $data['keywords'] . '%')->orderBy('sort','desc')->orderBy('id','desc')->get();
+        }
+
+        return view('goods::search', ['goods' => $goods,'keywords'=>$data['keywords']]);
+
 
     }
 
