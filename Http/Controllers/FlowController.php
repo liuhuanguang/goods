@@ -45,7 +45,7 @@ class FlowController extends Controller
             die;
         }
         $data = [
-            'user_id' => 1,
+            'user_id' => $this->user,
             'goods_id' => $goods_id,
             'goods_sn' => $goods->goods_sn,
             'goods_price' => $goods->goods_price,
