@@ -1,18 +1,18 @@
 @section('footer')
 <div class="footer_nav container between">
-    <a class="list " href="index.html">
+    <a class="list " href="index/">
         <i class="nav_box i_home"></i>
         <p>首页</p>
     </a>
-    <a class="list active" href="screen.html">
+    <a class="list active" href="category/">
         <i class="nav_box i_cate"></i>
         <p>分类</p>
     </a>
-    <a class="list" href="integral.html">
+    <a class="list" href="integral/">
         <i class="nav_box i_shop"></i>
         <p>积分商城</p>
     </a>
-    <a class="list" href="my.html">
+    <a class="list" href="user/">
         <i class="nav_box i_user"></i>
         <p>我的</p>
     </a>

@@ -75,49 +75,7 @@
 	</li>
 </ul>
 <!-- 底部nav -->
-<div class="footer_nav container between">
-	<a class="list active" href="index.html">
-		<i class="nav_box i_home"></i>
-		<p>首页</p>
-	</a>
-	<a class="list" href="screen.html">
-		<i class="nav_box i_cate"></i>
-		<p>分类</p>
-	</a>
-	<a class="list" href="integral.html">
-		<i class="nav_box i_shop"></i>
-		<p>积分商城</p>
-	</a>
-	<a class="list" href="my.html">
-		<i class="nav_box i_user"></i>
-		<p>我的</p>
-	</a>
-</div>
-<!-- 返回顶部 -->
-<div class="gotop">
-	<i class="iconfont icon-dingbu"></i>
-</div>
-</div>
-
-
-</div>
-<script type="text/javascript" src="{{ URL::asset('static/js/jquery.js')}}"></script>
-<script type="text/javascript" src="{{ URL::asset('static/js/swiper-4.2.2.min.js')}}"></script>
-<script type="text/javascript" src="{{ URL::asset('static/js/js.js')}}"></script>
-
-<script>
-window.onload = function() {
-	// 顶部banner
-	var bannerSwiper = new Swiper('#swiper1', {
-		autoplay: {
-		    delay: 5000,
-		},
-		pagination: {
-	        el: '.swiper-pagination',
-	    },
-	});
-}
-
-</script>
-</body>
-</html>
+@extends('goods::layouts.footer')
+@section('footer')
+	@parent
+@endsection

@@ -46,7 +46,7 @@
     function buy(){
 	var id=$('input[name=cart_id]').val();
         $.ajax({
-            url:'order/pay',
+            url:'/payments/order_pay',
             type: 'post',
             data : {"cart_id" :id},
             headers: {
