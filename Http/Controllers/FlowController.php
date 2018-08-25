@@ -53,7 +53,7 @@ class FlowController extends Controller
             'goods_number' => $number
         ];
         //判断存在购物车就相加
-        $cart = DB::table('cart')->where('user_id', 1)->where('goods_id', $goods_id)->value('id');
+        $cart = DB::table('cart')->where('user_id',$this->user)->where('goods_id', $goods_id)->value('id');
         if (false == $cart) {
             DB::beginTransaction();
             try {
