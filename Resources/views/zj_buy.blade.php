@@ -53,7 +53,7 @@
             dataType:'json',
             success : function (res){
                 if(res.code == 200){
-                    window.location.href = '/payments/pay?order_id='+res.order_id;
+                    window.location.href = '/payments/pay?order_id='+res.order_id+'&type=buy';
                 }else{
                     alert(data.msg);
                 }

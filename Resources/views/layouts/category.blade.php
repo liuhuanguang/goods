@@ -10,7 +10,7 @@
 		<div class="hidd show">
 			<ul class="screen_list container p3" style="justify-content: flex-start;">
 				@foreach($next_cat as $key=>$next)
-				<li><a href="goodslist?id={{$cat['id']}}"><img src="{{ URL::asset($next->category_img)}}" alt=""><p>{{$next->goods_category_name}}</p></a></li>
+				<li><a href="goodslist?id={{$next->id}}"><img src="{{ URL::asset($next->category_img)}}" alt=""><p>{{$next->goods_category_name}}</p></a></li>
 				@endforeach
 			</ul>
 		</div>
