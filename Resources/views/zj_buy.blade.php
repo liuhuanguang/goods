@@ -26,6 +26,7 @@
 			</div>
 		</a>
 	</div>
+	<input type="hidden" name="number" id="number" value="{{$goods->number}}">
 	<!-- <div class="xiaoji">
 		<p class="left fl">商品小计</p>
 		<p class="right fr">￥<span>48</span></p>
@@ -43,10 +44,11 @@
 <script>
     function buy(){
 	var id=$('input[name=cart_id]').val();
+	var number=$('#number').val();
         $.ajax({
             url:'/payments/order_pay',
             type: 'post',
-            data : {"cart_id" :id},
+            data : {"cart_id" :id,'number':number},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
