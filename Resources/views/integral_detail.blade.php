@@ -92,7 +92,7 @@
 </div>
 <div class="fix_bnt p3 container between">
 	<div class="left"><a href="index"><i class="iconfont icon-shouye"></i><p>首页</p></a></div>
-	<a href="/payments/integral_order_pay?id={{$goods_detail->id}}"><div class="right_c">立即兑换</div></a>
+	<div class="right_c" onclick="buy({{$goods_detail->id}})">立即兑换</div>
 </div>
 
 
@@ -107,6 +107,25 @@
         type: 'fraction',
       },
     });
+    function buy(id){
+        $.ajax({
+            url:'/payments/integral_order_pay',
+            type: 'post',
+            data : {"id" :id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType:'json',
+            success : function (res){
+                if(res.code == 200){
+                    window.location.href = '/payments/pay?order_id='+res.order_id;
+                }else{
+                    alert(data.msg);
+                }
+
+            }
+        });
+    }
   </script>
 </body>
 </html>
