@@ -46,7 +46,7 @@
 	var id=$('input[name=cart_id]').val();
 	var number=$('#number').val();
         $.ajax({
-            url:'/payments/order_pay',
+            url:'/payments/goods',
             type: 'post',
             data : {"cart_id" :id,'number':number},
             headers: {
