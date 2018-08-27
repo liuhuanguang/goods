@@ -10,21 +10,21 @@ error_reporting( E_PARSE );
 class GoodsController extends Controller
 {
     protected $user_id = 1;
-//    public function __construct()
-//    {
-////        if(!session('user')){
-////            return redirect()->route('login');
-////        }
-////        $this->request = request();
-//        // 验证是否登录
-//        $this->middleware(function ($request, $next) {
-//            if (!session('user')) {
-//                redirect('user/login')->send();exit();
-//            }
-//            $this->user=session('user')['id'];
-//            return $next($request);
-//        });
-//    }
+    public function __construct()
+    {
+//        if(!session('user')){
+//            return redirect()->route('login');
+//        }
+//        $this->request = request();
+        // 验证是否登录
+        $this->middleware(function ($request, $next) {
+            if (!session('user')) {
+                redirect('user/login')->send();exit();
+            }
+            $this->user=session('user')['id'];
+            return $next($request);
+        });
+    }
     /**
      * Display a listing of the resource.
      * @return Response

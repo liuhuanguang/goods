@@ -12,21 +12,21 @@ error_reporting(E_PARSE);
 class FlowController extends Controller
 {
     protected $user = 1;
-//    public function __construct()
-//    {
-////        if(!session('user')){
-////            return redirect()->route('login');
-////        }
-////        $this->request = request();
-//        // 验证是否登录
-//        $this->middleware(function ($request, $next) {
-//            if (!session('user')) {
-//                redirect('user/login')->send();exit();
-//            }
-//            $this->user=session('user')['id'];
-//            return $next($request);
-//        });
-//    }
+    public function __construct()
+    {
+//        if(!session('user')){
+//            return redirect()->route('login');
+//        }
+//        $this->request = request();
+        // 验证是否登录
+        $this->middleware(function ($request, $next) {
+            if (!session('user')) {
+                redirect('user/login')->send();exit();
+            }
+            $this->user=session('user')['id'];
+            return $next($request);
+        });
+    }
     public function addcart(Request $request)
     {
         $goods_id = $request->input('id');
