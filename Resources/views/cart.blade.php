@@ -14,13 +14,14 @@
 			<li class="cl-a">
 				<div class="label fl">
 					<label>
-						<input type="checkbox" name="cart_id" value="{{$val->id}}"  />
+						<input type="checkbox" name="cart_id" value="{{$val->id}}"/>
 						<img src="{{ URL::asset('static/img/c_checkbox_off.png')}}" /> </label>
 				</div>
-				<div class="img fl"> <img src="{{ URL::asset($val->goods_images)}}" /> </div>
+				<div class="img fl"><a href="goods_detail?id={{$val->goods_id}}"><img src="{{ URL::asset($val->goods_images)}}" /></a>  </div>
 				<div class="text fl">
 					<h3>{{$val->goods_name}}</h3>
 					{{--<div class="guige">规格：<span>红色</span><span>M号</span></div>--}}
+					<div class="guige">规格：{{$val->goods_attr}}</div>
 					<div class="cl-a">
 						<span class="fl price">￥{{$val->goods_price}}</span>
 						<sapn class="div_right">
@@ -93,6 +94,10 @@
                 cart_id += (","+$(this).val());
             }
         });
+        if(cart_id==''){
+
+            alert('请勾选商品');exit;
+		}
         $.ajax({
             url:'flow/buy',
             type: 'post',

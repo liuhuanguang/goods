@@ -17,23 +17,47 @@
 	</div>
 		<input type="hidden" name="cart_id" value="{{$goods->id}}">
 	<div class="goods p3">
-		<a class="cl-a" href="list_ny.html">
+		<a class="cl-a" href="../goods_detail?id={{$goods->id}}">
 			<img class="fl img" src="{{ URL::asset($goods->goods_images)}}" alt="">
 			<div class="fl center">
 				<p class="name">{{$goods->goods_name}}</p>
-				{{--<div class="guige">规格：<span>红色</span><span>M号</span></div>--}}
+				<div class="guige">规格：
+					@foreach($attr as $val)
+					<span>{{$val->attr_name}}</span><span>{{$val->attr_value}}</span>
+					@endforeach
+				</div>
 				<div class="cl-a down"><p class="number fl">×{{$goods->number}}</p><p class="price fr">￥{{$goods->goods_price}}</p></div>
 			</div>
 		</a>
 	</div>
 	<input type="hidden" name="number" id="number" value="{{$goods->number}}">
+    <input type="hidden" name="attr_id" id="attr_id" value="{{$attr_id}}">
+	<div class="buy_discount">
+		<p class="fl">优惠劵</p>
+		<i class="iconfont icon-jiantou fr"></i>
+        <input type="hidden" name="c_id" value="">
+		<span class="fr">{{$coupon_count}}</span>
+	</div>
+	<div class="buy_discount_box">
+		<div class="mask"></div>
+		<div class="list_box  p3">
+			<h3>优惠劵</h3>
+			<ul class="yh_list">
+                <li onclick="clear_coupon()"><input type="hidden" name="coupon_id" value="0">不使用优惠券</li>
+                @foreach($coupon as $val)
+				<li onclick="coupon({{$goods->count}},{{$val->id}})"><input type="hidden" name="coupon_id" value="{{$val->id}}">满{{$val->discount_full_money}}减{{$val->discount_price}}</li>
+				@endforeach
+			</ul>
+			<div class="close">关闭</div>
+		</div>
+	</div>
 	<!-- <div class="xiaoji">
 		<p class="left fl">商品小计</p>
 		<p class="right fr">￥<span>48</span></p>
 	</div> -->
 	<div class="gobuy">
 		<a class="bnt fr" onclick="buy()">去结算</a>
-		<div class="fr price">需付：<p><span>￥{{$goods->count}}</span></p></div>
+        <div class="fr price">红包：<p><span id="coupon">-￥0</span></p> 需付：<p><span id="amount">￥{{$goods->count}}</span></p>积分：{{$integral}}</div>
 	</div>
 </div>
 
@@ -45,10 +69,12 @@
     function buy(){
 	var id=$('input[name=cart_id]').val();
 	var number=$('#number').val();
+	var attr_id=$('#attr_id').val();
+	var coupon=$('input[name=c_id]').val();
         $.ajax({
             url:'/payments/goods',
             type: 'post',
-            data : {"cart_id" :id,'number':number},
+            data : {"cart_id" :id,'number':number,'attr_id':attr_id,'coupon_id':coupon},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -62,6 +88,28 @@
 
             }
         });
+    }
+
+    function coupon(amount,coupon_id){
+        $.ajax({
+            url:'flow/coupon',
+            type: 'post',
+            data : {"amount" :amount,'coupon_id':coupon_id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType:'json',
+            success : function (res){
+              $("#coupon").html('-'+res.coupon);
+              $("#amount").html(+res.amount);
+
+            }
+        });
+
+    }
+
+    function clear_coupon() {
+        window.location.reload();
     }
 
 

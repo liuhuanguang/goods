@@ -85,7 +85,7 @@
             <i class="iconfont icon-biaoqingleiben"></i>
             <p>亲，此处没有内容～！</p>
                 @else
-                {{$goods_detail->goods_desc}}
+                {!!$goods_detail->goods_desc!!}
             @endif
         </div>
     </div>
@@ -109,10 +109,10 @@
         <div class="add">
             @if(!empty($attr))
             @foreach($attr['attr_name'] as $key=>$val)
-            <h3>{{$val['attr_name']}}</h3>
+            <h3 class="">{{$val['attr_name']}}</h3>
             <div class="spec container between">
                 @foreach($val['attr_value'] as $keys=>$value)
-                <p>{{$value['attr_value']}}</p>
+                <p><input type="hidden" name="attr_id" value="{{$value['id']}}">{{$value['attr_value']}}</p>
                 @endforeach
             </div>
             @endforeach
@@ -142,11 +142,34 @@
       },
     });
     function addcart(id){
+        var list=$(".show_goods .goods_box .add .spec p.active");
+
+        var arr=[];
+        // var arr=[],arr2=[];
+
+        for(var i=0;i<list.length;i++){
+
+            arr.push($(".show_goods .goods_box .add .spec .active input[name=attr_id]:eq("+i+")").val())
+            // arr2.push($(".add h3:eq("+i+")").html())
+        }
+        // var rs = [],key=['id','name'];
+        // rs = arr.map(function(item,index){
+        //     var obj ={};
+        //     obj[key[0]] = arr2[index];
+        //     obj[key[1]] = arr[index];
+        //     return obj;
+        // });
+        //判断有没有规格
+        var value=$("input[name=attr_id]").val();
+        if(value!=undefined&&arr==''){
+            alert('请选择规格');exit;
+        }
+
         var number=$("#number").val();
         $.ajax({
             url:'addcart',
             type: 'get',
-            data : {"id" : id,"number":number},
+            data : {"id" : id,"number":number,"attr_id":arr},
             dataType:'json',
             success : function (res){
                 alert(res);
@@ -158,22 +181,39 @@
     function zj_buy(id) {
         // alert($(".show_goods .goods_box .add .spec p.active").length)
         var list=$(".show_goods .goods_box .add .spec p.active");
-        var arr=[];
+
+       var arr=[];
+       // var arr=[],arr2=[];
+
         for(var i=0;i<list.length;i++){
-            // alert($(".show_goods .goods_box .add .spec .active:eq("+i+")").html())
-            arr.push($(".show_goods .goods_box .add .spec .active:eq("+i+")").html())
+
+            arr.push($(".show_goods .goods_box .add .spec .active input[name=attr_id]:eq("+i+")").val())
+            // arr2.push($(".add h3:eq("+i+")").html())
         }
+        // var rs = [],key=['id','name'];
+        // rs = arr.map(function(item,index){
+        //     var obj ={};
+        //     obj[key[0]] = arr2[index];
+        //     obj[key[1]] = arr[index];
+        //     return obj;
+        // });
+        //判断有没有规格
+        var value=$("input[name=attr_id]").val();
+        if(value!=undefined&&arr==''){
+            alert('请选择规格');exit;
+        }
+
         var number = $("#number").val();
             $.ajax({
                 url:'flow/zj_cart_buy',
                 type: 'post',
-                data : {"id" : id,"number":number,"attr":arr},
+                data : {"id" : id,"number":number,"attr_id":arr},
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 dataType:'json',
                 success : function (res){
-                    window.location.href = "flow/zj_buy?id="+res.id+"&number="+res.number;
+                    window.location.href = "flow/zj_buy?id="+res.id+"&number="+res.number+"&attr="+res.attr_id;
                 }
             });
         }
