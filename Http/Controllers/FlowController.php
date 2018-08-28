@@ -156,7 +156,7 @@ class FlowController extends Controller
         $coupon = DB::table('discount')->select('id', 'discount_name', 'discount_price', 'discount_full_money')->where('start_at', '<=', $time)->where('end_at', '>=', $time)->where('status', 0)->where('user_id', $this->user)->where('discount_full_money', '<=', $goods->count)->get();
         //可用优惠券数量
         $coupon_count = DB::table('discount')->where('start_at', '<=', $time)->where('end_at', '>=', $time)->where('status', 0)->where('user_id', $this->user)->where('discount_full_money', '<=', $goods->count)->count();
-        $integral = intval($goods->count * $goods->inregral);
+        $integral = intval($goods->count * $goods->integral);
         return view('goods::zj_buy', ['goods' => $goods, 'attr' => $attr, 'coupon' => $coupon, 'coupon_count' => $coupon_count, 'integral' => $integral, 'attr_id' => $data['attr']]);
 
     }

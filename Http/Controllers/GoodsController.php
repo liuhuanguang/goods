@@ -9,22 +9,21 @@ use Illuminate\Support\Facades\DB;
 error_reporting( E_PARSE );
 class GoodsController extends Controller
 {
-    protected $user_id = 1;
-    public function __construct()
-    {
-//        if(!session('user')){
-//            return redirect()->route('login');
-//        }
-//        $this->request = request();
-        // 验证是否登录
-        $this->middleware(function ($request, $next) {
-            if (!session('user')) {
-                redirect('user/login')->send();exit();
-            }
-            $this->user=session('user')['id'];
-            return $next($request);
-        });
-    }
+//    protected $user_id = 1;
+//    public function __construct()
+//    {
+////        if(!session('user')){
+////            return redirect()->route('login');
+////        }
+////        $this->request = request();
+//        // 验证是否登录
+//        $this->middleware(function ($request, $next) {
+//            if (!session('user')) {
+//                redirect('user/login')->send();exit();
+//            }
+//            $this->user_id=session('user')['id'];
+//        });
+//    }
     /**
      * Display a listing of the resource.
      * @return Response
@@ -73,7 +72,7 @@ class GoodsController extends Controller
 
         }
         //查出购物车数量
-        $cart_number = DB::table('cart')->where('user_id', $this->user_id)->count();
+        $cart_number = DB::table('cart')->where('user_id', session('user')['id'])->count();
         return view('goods::goods_detail', ['goods_detail' => $goods_detail, 'attr' => $attr, 'cart_number' => $cart_number]);
     }
 

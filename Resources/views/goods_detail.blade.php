@@ -62,12 +62,12 @@
         <div class="swiper-pagination"></div>
     </div>
     <div class="return"><a href=""><i class="iconfont icon-jiantou"></i></a></div>
-    <div class="list_ny_code"><img src="{{ URL::asset('static/img/ewm1.png')}}"></div>
+    <div class="list_ny_code"><img src="{{ URL::asset($goods_detail->goods_ewm)}}"></div>
 </div>
 <div class="show_code">
     <div class="mask"></div>
     <div class="code_box">
-        <img src="{{ URL::asset('static/img/1534128646.png')}}">
+        <img src="{{ URL::asset($goods_detail->goods_ewm)}}">
     </div>
 </div>
 <div class="list_ny_price p3 db">
